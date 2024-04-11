@@ -5,8 +5,15 @@
 package mg.itu.abrahamram.tpbanqueabraham.service;
 
 import jakarta.annotation.sql.DataSourceDefinition;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Named;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+import java.util.List;
+import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
 
 /**
  *
@@ -27,8 +34,12 @@ import jakarta.enterprise.context.RequestScoped;
     }
 )
 @Named(value = "gestionnaireCompte")
-@RequestScoped
+//@RequestScoped
+@Dependent
 public class GestionnaireCompte {
+
+	@PersistenceContext(unitName = "banquePU")
+	private EntityManager em;
 
 	/**
 	 * Creates a new instance of GestionnaireCompte
@@ -36,4 +47,18 @@ public class GestionnaireCompte {
 	public GestionnaireCompte() {
 	}
 
+	@Transactional
+	public void creerCompte(CompteBancaire compteBancaire) {
+		em.persist(compteBancaire);
+	}
+
+	public List<CompteBancaire> getAllComptes() {
+		TypedQuery<CompteBancaire> query = em.createNamedQuery("CompteBancaire.findAll", CompteBancaire.class);
+		return query.getResultList();
+	}
+
+	public long nbComptes() {
+		TypedQuery<Long> query = em.createNamedQuery("CompteBancaire.count", Long.class);
+		return query.getResultList().get(0);
+	}
 }

@@ -5,11 +5,10 @@
 package mg.itu.abrahamram.tpbanqueabraham.service;
 
 import jakarta.annotation.sql.DataSourceDefinition;
-import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -35,7 +34,7 @@ import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
 )
 @Named(value = "gestionnaireCompte")
 //@RequestScoped
-@Dependent
+@ApplicationScoped
 public class GestionnaireCompte {
 
 	@PersistenceContext(unitName = "banquePU")

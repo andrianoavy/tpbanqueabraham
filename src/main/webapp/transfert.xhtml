@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets">
+
+	<body>
+
+		<ui:composition template="/WEB-INF/template/template_defaut.xhtml">
+
+			<ui:define name="top">
+				Transert d'argent
+			</ui:define>
+
+			<ui:define name="content">
+				<h:form id="form">
+					<h:panelGrid columns="3">
+						Id compte source : 
+						<h:inputText id="source" size="3" value="#{transfert.source}"
+							     requiredMessage="La source doit être précisée"
+							     converter="compteConverter"
+							     required="true"
+							     />
+						<h:message for="source"/>
+						Id compte destination :
+						<h:inputText id="destination" size="3" value="#{transfert.destination}"
+							     converter="compteConverter"
+							     required="true"
+							     requiredMessage="La destination doit être précisée"
+							     />
+						<h:message for="destination"/>
+						Montant &agrave; transf&eacute;rer
+						<h:inputText id="montant" size="3" value="#{transfert.montant}"
+							     converterMessage="test"
+							     required="true"
+							     requiredMessage="Le montant doit être précisé"
+							     />
+						<h:message for="montant"/>
+					</h:panelGrid>
+					<h:commandButton value="Confirmer" action="#{transfert.transferer()}"/>
+				</h:form>
+				<h:messages/>
+			</ui:define>
+
+		</ui:composition>
+
+	</body>
+</html>

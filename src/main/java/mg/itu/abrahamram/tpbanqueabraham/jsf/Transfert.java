@@ -10,12 +10,12 @@ import jakarta.faces.event.AbortProcessingException;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Named;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
 import mg.itu.abrahamram.tpbanqueabraham.jsf.util.MessageUtil;
-import static mg.itu.abrahamram.tpbanqueabraham.jsf.util.MessageUtil.message;
 import mg.itu.abrahamram.tpbanqueabraham.service.GestionnaireCompte;
 
 /**
@@ -31,6 +31,7 @@ public class Transfert implements Serializable {
 
 	private CompteBancaire source;
 	private CompteBancaire destination;
+	@PositiveOrZero
 	private int montant;
 
 	public CompteBancaire getSource() {

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html">
+
+	<body>
+
+		<ui:composition template="./WEB-INF/template/template_defaut.xhtml">
+
+			<ui:define name="top">
+				Création d'un nouveau compte
+			</ui:define>
+
+			<ui:define name="content">
+				<h:form id="form">
+					<h:panelGrid columns="3">
+						Nom du compte : 
+						<h:inputText id="nom" size="25" value="#{nouveauCompte.nom}"
+							     requiredMessage="Le nom du compte doit être précisé"
+							     required="true"
+							     />
+						<h:message for="nom" errorStyle="color:red;"/>
+						Solde initial :
+						<h:inputText id="solde" size="5" value="#{nouveauCompte.solde}"
+							     required="true"
+							     requiredMessage="Le solde initial doit être précisée"
+							     />
+						<h:message for="solde" errorStyle="color:red;"/>
+					</h:panelGrid>
+					<h:commandButton value="Confirmer" action="#{nouveauCompte.creerCompte()}"/>
+				</h:form>
+			</ui:define>
+
+		</ui:composition>
+
+	</body>
+</html>

@@ -68,7 +68,7 @@ public class CompteBancaire implements Serializable {
 	public static class SoldeInsuffisantException extends Exception{} 
 
 	public void retirer(int montant) throws SoldeInsuffisantException{
-		if (montant < solde) {
+		if (montant <= solde) {
 			solde -= montant;
 		} else {
 			throw new SoldeInsuffisantException();

@@ -76,4 +76,15 @@ public class GestionnaireCompte {
 	public CompteBancaire findById(Long idCompteBancaire) {
 		return em.find(CompteBancaire.class, idCompteBancaire);
 	}
+
+	@Transactional
+	public void modifierSolde(CompteBancaire compte, int montant, boolean depot) throws CompteBancaire.SoldeInsuffisantException {
+		if(depot) {
+			compte.deposer(montant);
+		}
+		else{
+			compte.retirer(montant);
+		}
+		em.merge(compte);
+	}
 }

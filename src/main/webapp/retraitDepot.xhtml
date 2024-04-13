@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html">
+
+	<body>
+
+		<ui:composition template="./WEB-INF/template/template_defaut.xhtml">
+
+			<ui:define name="metadata">
+				<f:metadata>
+					<f:viewParam name="id" value="#{retraitDepot.compte}" converter="compteConverter"/>
+					<f:viewParam name="m" value="#{retraitDepot.montant}" />
+					<f:viewParam name="d" value="#{retraitDepot.depot}" />
+				</f:metadata>
+			</ui:define>
+
+			<ui:define name="top">
+				Retirer ou déposer de l'argent
+			</ui:define>
+
+			<ui:define name="content">
+				<h:form id="form">
+					<h:panelGrid columns="3">
+					Compte en cours de modification:
+					<h:outputText value="[#{retraitDepot.compte.id}] - #{retraitDepot.compte.nom}" style="font-weight: bold;" />
+					<h:outputText value="solde = #{retraitDepot.compte.solde}" style="font-weight: bold;" />
+						Opération : 
+						<h:selectOneRadio id="depot" value="#{retraitDepot.depot}"
+								  >
+							<f:selectItem itemValue="true" itemLabel="Dépôt"/>
+							<f:selectItem itemValue="false" itemLabel="Retrait"/>
+						</h:selectOneRadio>
+						<h:message for="depot" errorStyle="color:red;"/>
+						Montant à transférer :
+						<h:inputText id="montant" size="5" value="#{retraitDepot.montant}"
+							     required="true"
+							     requiredMessage="Le montant doit être précisée"
+							     />
+						<h:message for="montant" errorStyle="color:red;"/>
+					</h:panelGrid>
+					<h:commandButton value="Confirmer" action="#{retraitDepot.effectueTransaction()}"/>
+				</h:form>
+				<h:messages globalOnly="true" errorStyle="color:red;"/>
+			</ui:define>
+
+		</ui:composition>
+
+	</body>
+</html>

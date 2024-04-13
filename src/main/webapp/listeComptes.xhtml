@@ -48,6 +48,14 @@
 								<f:convertNumber pattern="###,###,##0"/>
 							</h:outputText>
 						</p:column>
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Actions"/>
+							</f:facet>
+							<h:commandLink action="#{listeComptes.supprimerCompte(item)}">
+								<h:graphicImage alt="supprimer" title="Supprimer" name="images/del.png"/>
+							</h:commandLink>
+						</p:column>
 					</p:dataTable>
 				</h:form>
 			</ui:define>

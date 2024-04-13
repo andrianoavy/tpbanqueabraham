@@ -4,13 +4,13 @@
  */
 package mg.itu.abrahamram.tpbanqueabraham.jsf;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
 import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
+import mg.itu.abrahamram.tpbanqueabraham.jsf.util.MessageUtil;
 import mg.itu.abrahamram.tpbanqueabraham.service.GestionnaireCompte;
 
 /**
@@ -25,17 +25,24 @@ public class ListeComptes implements Serializable {
 	private GestionnaireCompte gc;
 
 	private List<CompteBancaire> allComptes;
-	
+
 	/**
 	 * Creates a new instance of ListeComptes
 	 */
 	public ListeComptes() {
 	}
-	
+
 	public List<CompteBancaire> getAllComptes() {
-		if(allComptes == null){
+		if (allComptes == null) {
 			allComptes = gc.getAllComptes();
 		}
 		return allComptes;
+	}
+
+	public String supprimerCompte(CompteBancaire compteBancaire) {
+		String message = "Le compte ["+compteBancaire.getId()+"] au nom de `"+compteBancaire.getNom()+"` a été supprimé avec succès";
+		gc.supprimer(compteBancaire);
+		MessageUtil.addFlashInfoMessage(message);
+		return "listeComptes?faces-redirect=true";
 	}
 }

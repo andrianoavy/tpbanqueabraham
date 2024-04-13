@@ -62,7 +62,7 @@ public class GestionnaireCompte {
 	}
 
 	@Transactional
-	public void transferer(CompteBancaire source, CompteBancaire destinataire, int montant) {
+	public void transferer(CompteBancaire source, CompteBancaire destinataire, int montant) throws CompteBancaire.SoldeInsuffisantException{
 		source.retirer(montant);	
 		destinataire.deposer(montant);
 		update(source);

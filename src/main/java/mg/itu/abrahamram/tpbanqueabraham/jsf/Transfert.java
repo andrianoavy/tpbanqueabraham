@@ -5,10 +5,17 @@
 package mg.itu.abrahamram.tpbanqueabraham.jsf;
 
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.convert.ConverterException;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Named;
 import jakarta.inject.Inject;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
+import mg.itu.abrahamram.tpbanqueabraham.jsf.util.MessageUtil;
+import static mg.itu.abrahamram.tpbanqueabraham.jsf.util.MessageUtil.message;
 import mg.itu.abrahamram.tpbanqueabraham.service.GestionnaireCompte;
 
 /**
@@ -19,7 +26,7 @@ import mg.itu.abrahamram.tpbanqueabraham.service.GestionnaireCompte;
 @RequestScoped
 public class Transfert implements Serializable {
 
-	@Inject	
+	@Inject
 	private GestionnaireCompte gc;
 
 	private CompteBancaire source;
@@ -42,7 +49,6 @@ public class Transfert implements Serializable {
 		this.destination = destination;
 	}
 
-
 	public int getMontant() {
 		return montant;
 	}
@@ -52,14 +58,29 @@ public class Transfert implements Serializable {
 	}
 
 	public String transferer() {
-		gc.transferer(source, destination, montant);
-		return "/listeComptes?faces-redirect=true";	
+		boolean erreur = false;
+		if (source.getId() == destination.getId()) {
+			MessageUtil.messageErreur("Les ids source et destination ne doivent pas être les mêmes");
+			return null;
+		}
+
+		try {
+			gc.transferer(source, destination, montant);
+		} catch (CompteBancaire.SoldeInsuffisantException ex) {
+MessageUtil.messageErreur("Le compte source `ID = "+source.getId()+"` a un solde insuffisant(solde="+source.getSolde()+") pour le transfert", "Solde insuffisant", "form:source");
+MessageUtil.messageErreur("Le montant à transférer est supérieur à la solde disponible("+montant+">"+source.getSolde()+")", "Solde insuffisant", "form:montant");
+			return null;
+		}
+
+		MessageUtil.addFlashInfoMessage("Transfert de la somme de [" + montant + "] depuis le compte `" + source.getNom()+ "` vers `" + destination.getNom() + "` accompli avec succès");
+
+		return "listeComptes?faces-redirect=true";
 	}
-	
+
 	/**
 	 * Creates a new instance of TransfertBean
 	 */
 	public Transfert() {
 	}
-	
+
 }

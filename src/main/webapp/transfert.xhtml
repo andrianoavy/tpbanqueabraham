@@ -2,11 +2,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:ui="jakarta.faces.facelets">
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
 
 	<body>
 
 		<ui:composition template="/WEB-INF/template/template_defaut.xhtml">
+			<ui:define name="metadata">
+				<f:metadata>
+					<f:viewParam name="s" value="#{transfert.source}" converter="compteConverter" />
+					<f:viewParam name="d" value="#{transfert.destination}" converter="compteConverter" />
+					<f:viewParam name="m" value="#{transfert.montant}"/>
+				</f:metadata>
+			</ui:define>
 
 			<ui:define name="top">
 				Transert d'argent
@@ -21,25 +29,24 @@
 							     converter="compteConverter"
 							     required="true"
 							     />
-						<h:message for="source"/>
+						<h:message for="source" errorStyle="color:red;"/>
 						Id compte destination :
 						<h:inputText id="destination" size="3" value="#{transfert.destination}"
 							     converter="compteConverter"
 							     required="true"
 							     requiredMessage="La destination doit être précisée"
 							     />
-						<h:message for="destination"/>
+						<h:message for="destination" errorStyle="color:red;"/>
 						Montant &agrave; transf&eacute;rer
 						<h:inputText id="montant" size="3" value="#{transfert.montant}"
-							     converterMessage="test"
 							     required="true"
 							     requiredMessage="Le montant doit être précisé"
 							     />
-						<h:message for="montant"/>
+						<h:message for="montant" errorStyle="color:red;"/>
 					</h:panelGrid>
 					<h:commandButton value="Confirmer" action="#{transfert.transferer()}"/>
 				</h:form>
-				<h:messages/>
+				<h:messages globalOnly="true" errorStyle="color:red;"/>
 			</ui:define>
 
 		</ui:composition>

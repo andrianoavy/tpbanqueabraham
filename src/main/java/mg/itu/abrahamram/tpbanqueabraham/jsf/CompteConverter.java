@@ -4,9 +4,11 @@
  */
 package mg.itu.abrahamram.tpbanqueabraham.jsf;
 
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.ConverterException;
 import jakarta.faces.convert.FacesConverter;
 import jakarta.inject.Inject;
 import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
@@ -30,12 +32,15 @@ public class CompteConverter implements Converter<CompteBancaire> {
 	 */
 	@Override
 	public CompteBancaire getAsObject(FacesContext context, UIComponent component, String value) {
-		System.out.println("VALUE "+value);
-		System.out.println("LONG "+Long.parseUnsignedLong(value));
-		if (value == null) {
+		if (value == null || value.isBlank()) {
 			return null;
 		}
-		return gc.findById(Long.parseLong(value));
+		CompteBancaire compte = gc.findById(Long.parseLong(value));
+		if(compte == null) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Pas de compte associé","Pas de compte associé à l'ID `"+value+"`");
+			throw new ConverterException(message);
+		}
+		return compte;
 	}
 
 	/**

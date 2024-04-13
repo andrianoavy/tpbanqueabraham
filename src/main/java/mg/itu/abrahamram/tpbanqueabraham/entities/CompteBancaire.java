@@ -65,11 +65,13 @@ public class CompteBancaire implements Serializable {
 		solde += montant;
 	}
 
-	public void retirer(int montant) {
+	public static class SoldeInsuffisantException extends Exception{} 
+
+	public void retirer(int montant) throws SoldeInsuffisantException{
 		if (montant < solde) {
 			solde -= montant;
 		} else {
-			solde = 0;
+			throw new SoldeInsuffisantException();
 		}
 	}
 

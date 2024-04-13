@@ -69,6 +69,7 @@ public class GestionnaireCompte {
 		update(destinataire);
 	}
 
+	@Transactional
 	public void update(CompteBancaire compteBancaire) {
 		em.merge(compteBancaire);
 	}

@@ -52,8 +52,12 @@
 							<f:facet name="header">
 								<h:outputText value="Actions"/>
 							</f:facet>
+							<h:link outcome="modifierNom?id=#{item.id}">
+								<h:graphicImage height="25" alt="renommer" title="Renommer" name="images/edit-48.png"/>
+							</h:link>
+							&nbsp;
 							<h:commandLink action="#{listeComptes.supprimerCompte(item)}">
-								<h:graphicImage alt="supprimer" title="Supprimer" name="images/del.png"/>
+								<h:graphicImage height="25" alt="supprimer" title="Supprimer" name="images/delete-48.png"/>
 							</h:commandLink>
 						</p:column>
 					</p:dataTable>

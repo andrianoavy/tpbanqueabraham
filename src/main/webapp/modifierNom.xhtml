@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html">
+
+	<body>
+
+		<ui:composition template="./WEB-INF/template/template_defaut.xhtml">
+
+			<ui:define name="metadata">
+				<f:metadata>
+					<f:viewParam name="id" value="#{modifierNom.compte}" converter="compteConverter"/>
+				</f:metadata>
+			</ui:define>
+
+			<ui:define name="top">
+				Modifier nom du compte
+			</ui:define>
+
+			<ui:define name="content">
+				<h:form id="form">
+					<h:panelGrid columns="3">
+					Compte en cours de modification:
+					<h:outputText value="[#{modifierNom.compte.id}]" style="font-weight: bold;" />
+					<h:outputText value="#{modifierNom.compte.nom}" style="font-weight: bold;" />
+						Nouveau nom :
+						<h:inputText id="nom" size="25" value="#{modifierNom.nouveauNom}"
+							     required="true"
+							     requiredMessage="Le nom doit être précisé"
+							     />
+						<h:message for="nom" errorStyle="color:red;"/>
+					</h:panelGrid>
+					<h:commandButton value="Confirmer" action="#{modifierNom.modifieNom()}"/>
+				</h:form>
+				<h:messages globalOnly="true" errorStyle="color:red;"/>
+			</ui:define>
+
+		</ui:composition>
+
+	</body>
+</html>

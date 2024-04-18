@@ -53,9 +53,15 @@
 				<h:outputText value="Actions"/>
 			    </f:facet>
 			    <h:commandLink action="#{listeComptes.supprimerCompte(item)}">
-				<h:graphicImage height="25" alt="supprimer" title="Supprimer" name="images/delete-48.png"/>
+				<h:graphicImage height="20" alt="supprimer" title="Supprimer" name="images/delete-48.png"/>
 			    </h:commandLink>
 			    <h:link outcome="modifierNom?id=#{item.id}" title="Renommer" value="Modifier le nom"> </h:link>
+			</p:column>
+			<p:column width="150">
+			    <f:facet name="header">
+				<h:outputText value="Historique opérations" escape="true"/>
+			    </f:facet>
+			    <h:link outcome="operations.xhtml?id=#{item.id}" title="Details" value="Détails"> </h:link>
 			</p:column>
 		    </p:dataTable>
 		</h:form>

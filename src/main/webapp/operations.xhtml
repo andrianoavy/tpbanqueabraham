@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/template/template_defaut.xhtml">
+
+            <ui:define name="metadata">
+		<f:metadata>
+		    <f:viewParam name="id" value="#{operations.compte}" converter="compteConverter"/>
+		</f:metadata>
+            </ui:define>
+
+            <ui:define name="top">
+                Historique des opérations
+            </ui:define>
+
+            <ui:define name="content">
+
+		<f:view>
+		    <h:form>
+			<h1>Historique des opérations sur le compte de #{operations.compte.nom}</h1>
+			<h:dataTable value="#{operations.operations}" var="item">
+			    <h:column>
+				<f:facet name="header">
+				    <h:outputText value="Id"/>
+				</f:facet>
+				<h:outputText value="#{item.id}"/>
+			    </h:column>
+			    <h:column>
+				<f:facet name="header">
+				    <h:outputText value="Description"/>
+				</f:facet>
+				<h:outputText value="#{item.description}"/>
+			    </h:column>
+			    <h:column>
+				<f:facet name="header">
+				    <h:outputText value="DateOperation"/>
+				</f:facet>
+				<h:outputText  value="#{item.dateOperation}">
+				    <f:convertDateTime type="localDateTime" dateStyle="short" />
+				</h:outputText>
+			    </h:column>
+			    <h:column>
+				<f:facet name="header">
+				    <h:outputText value="Montant"/>
+				</f:facet>
+				<h:outputText  value="#{item.montant}">
+				    <f:convertNumber pattern="###,###,##0"/>
+				</h:outputText>
+			    </h:column>
+			</h:dataTable>
+		    </h:form>
+		</f:view>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

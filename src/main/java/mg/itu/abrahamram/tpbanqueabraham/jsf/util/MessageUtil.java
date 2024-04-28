@@ -50,10 +50,11 @@ public class MessageUtil {
    * à un composant particulier. On peut donner un message différente pour
    * le message détaillé et pour le message résumé.
    * @param messageDetail
+   * @param clientId
    * @param messageResume 
    */
-  public static void messageErreur(String messageDetail, String messageResume) {
-    message(messageDetail, messageResume, FacesMessage.SEVERITY_ERROR);
+  public static void messageErreur(String messageDetail, String clientId) {
+    message(messageDetail, messageDetail, FacesMessage.SEVERITY_ERROR, clientId);
   }
 
   public static void messageErreur(String message) {

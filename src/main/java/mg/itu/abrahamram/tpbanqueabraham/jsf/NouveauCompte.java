@@ -23,7 +23,7 @@ public class NouveauCompte {
 	@Inject
 	private GestionnaireCompte gc;
 	private String nom;
-	@PositiveOrZero
+	@PositiveOrZero(message = "Le montant doit être supérieur à 0")
 	private int solde;
 
 	public String getNom() {

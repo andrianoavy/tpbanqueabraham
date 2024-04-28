@@ -34,7 +34,6 @@ import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
     }
 )
 @Named(value = "gestionnaireCompte")
-//@RequestScoped
 @ApplicationScoped
 public class GestionnaireCompte {
 
@@ -62,13 +61,15 @@ public class GestionnaireCompte {
 		return query.getResultList().get(0);
 	}
 
-	public void transferer(CompteBancaire source, CompteBancaire destinataire, int montant) throws CompteBancaire.SoldeInsuffisantException{
-		source.retirer(montant);	
+	@Transactional
+	public void transferer(CompteBancaire source, CompteBancaire destinataire, int montant) {
+		source.retirer(montant);
 		destinataire.deposer(montant);
 		update(source);
 		update(destinataire);
 	}
-	
+
+	@Transactional
 	public CompteBancaire update(CompteBancaire compteBancaire) {
 		return em.merge(compteBancaire);
 	}
@@ -77,11 +78,11 @@ public class GestionnaireCompte {
 		return em.find(CompteBancaire.class, idCompteBancaire);
 	}
 
-	public void modifierSolde(CompteBancaire compte, int montant, boolean depot) throws CompteBancaire.SoldeInsuffisantException {
-		if(depot) {
+	@Transactional
+	public void modifierSolde(CompteBancaire compte, int montant, boolean depot) {
+		if (depot) {
 			compte.deposer(montant);
-		}
-		else{
+		} else {
 			compte.retirer(montant);
 		}
 		em.merge(compte);
@@ -93,11 +94,4 @@ public class GestionnaireCompte {
 		em.remove(compteBancaire);
 	}
 
-	public CompteBancaire findByIdOptimistic(Long id) {
-		return em.find(CompteBancaire.class, id, LockModeType.OPTIMISTIC);
-	}
-
-	public void detach(CompteBancaire compte) {
-		em.detach(compte);
-	}
 }

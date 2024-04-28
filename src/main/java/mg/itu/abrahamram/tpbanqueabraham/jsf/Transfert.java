@@ -4,11 +4,11 @@
  */
 package mg.itu.abrahamram.tpbanqueabraham.jsf;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import java.io.Serializable;
+import java.util.Objects;
 import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
 import mg.itu.abrahamram.tpbanqueabraham.jsf.util.MessageUtil;
 import mg.itu.abrahamram.tpbanqueabraham.service.GestionnaireCompte;
@@ -18,7 +18,7 @@ import mg.itu.abrahamram.tpbanqueabraham.service.GestionnaireCompte;
  * @author Aldramech
  */
 @Named(value = "transfert")
-@RequestScoped
+@ViewScoped
 public class Transfert implements Serializable {
 
 	@Inject
@@ -52,32 +52,32 @@ public class Transfert implements Serializable {
 		this.montant = montant;
 	}
 
-	@Transactional
 	public String transferer() {
-		String currentUrl = "transfert?faces-redirect=true&s=" + source.getId() + "&d=" + destination.getId() + "&m=" + montant;
 		boolean erreur = false;
 
 		if (montant <= 0) {
-			MessageUtil.addFlashErrorMessage("Le montant doit être supérieur à 0", "form:montant");
+			MessageUtil.messageErreur("Le montant doit être supérieur à 0", "form:montant");
 			erreur = true;
 		}
 
-		if (source.getId() == destination.getId()) {
-			MessageUtil.addFlashErrorMessage("Les ids source et destination ne doivent pas être les mêmes");
+		if (Objects.equals(source.getId(), destination.getId())) {
+			MessageUtil.messageErreur("Les ids source et destination ne doivent pas être les mêmes");
 			erreur = true;
 		}
 
-		try {
-			gc.transferer(source, destination, montant);
-		} catch (CompteBancaire.SoldeInsuffisantException ex) {
-			MessageUtil.addFlashErrorMessage("Le compte source `ID = " + source.getId() + "` a un solde insuffisant(solde=" + source.getSolde() + ") pour le transfert", "form:source");
-			MessageUtil.addFlashErrorMessage("Le montant à transférer est supérieur à la solde disponible(" + montant + ">" + source.getSolde() + ")", "form:montant");
+		if (montant > source.getSolde()) {
+			MessageUtil.messageErreur("Le compte source `ID = " + source.getId() + "` a un solde insuffisant(solde=" + source.getSolde() + ") pour le transfert", "form:source");
+			MessageUtil.messageErreur("Le montant à transférer est supérieur à la solde disponible(" + montant + ">" + source.getSolde() + ")", "form:montant");
 			erreur = true;
 		}
 
 		if (erreur) {
-			return currentUrl;
+			return null;
 		}
+
+		//Si pas d'erreur
+		gc.transferer(source, destination, montant);
+
 		MessageUtil.addFlashInfoMessage("Transfert de la somme de [" + montant + "] depuis le compte `" + source.getNom() + "` vers `" + destination.getNom() + "` accompli avec succès");
 
 		return "listeComptes?faces-redirect=true";

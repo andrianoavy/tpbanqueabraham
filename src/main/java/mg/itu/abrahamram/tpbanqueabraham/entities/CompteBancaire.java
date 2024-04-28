@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "CompteBancaire.findAll", query = "SELECT c FROM CompteBancaire c join fetch c.operations"),
+    @NamedQuery(name = "CompteBancaire.findAll", query = "SELECT distinct c FROM CompteBancaire c join fetch c.operations"),
     @NamedQuery(name = "CompteBancaire.count", query = "SELECT count(c) FROM CompteBancaire c")
 })
 @Table(name = "comptebancaire")
@@ -91,15 +91,9 @@ public class CompteBancaire implements Serializable {
 		operations.add(new OperationBancaire("Crédit", montant));
 	}
 
-	public class SoldeInsuffisantException extends Exception{} 
-
-	public void retirer(int montant) throws SoldeInsuffisantException{
-		if (montant <= solde) {
-			solde -= montant;
-			operations.add(new OperationBancaire("Débit", montant * -1));
-		} else {
-			throw new SoldeInsuffisantException();
-		}
+	public void retirer(int montant) {
+		solde -= montant;
+		operations.add(new OperationBancaire("Débit", montant * -1));
 	}
 
 	@Override

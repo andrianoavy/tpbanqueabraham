@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "CompteBancaire.findAll", query = "SELECT c FROM CompteBancaire c"),
+    @NamedQuery(name = "CompteBancaire.findAll", query = "SELECT c FROM CompteBancaire c join fetch c.operations"),
     @NamedQuery(name = "CompteBancaire.count", query = "SELECT count(c) FROM CompteBancaire c")
 })
 @Table(name = "comptebancaire")
@@ -64,6 +64,15 @@ public class CompteBancaire implements Serializable {
 		return id;
 	}
 
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	
+
 	public CompteBancaire() {
 	}
 
@@ -82,7 +91,7 @@ public class CompteBancaire implements Serializable {
 		operations.add(new OperationBancaire("Crédit", montant));
 	}
 
-	public static class SoldeInsuffisantException extends Exception{} 
+	public class SoldeInsuffisantException extends Exception{} 
 
 	public void retirer(int montant) throws SoldeInsuffisantException{
 		if (montant <= solde) {

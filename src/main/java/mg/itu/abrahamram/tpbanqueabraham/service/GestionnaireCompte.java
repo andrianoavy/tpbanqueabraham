@@ -8,6 +8,7 @@ import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
@@ -61,24 +62,21 @@ public class GestionnaireCompte {
 		return query.getResultList().get(0);
 	}
 
-	@Transactional
 	public void transferer(CompteBancaire source, CompteBancaire destinataire, int montant) throws CompteBancaire.SoldeInsuffisantException{
 		source.retirer(montant);	
 		destinataire.deposer(montant);
 		update(source);
 		update(destinataire);
 	}
-
-	@Transactional
-	public void update(CompteBancaire compteBancaire) {
-		em.merge(compteBancaire);
+	
+	public CompteBancaire update(CompteBancaire compteBancaire) {
+		return em.merge(compteBancaire);
 	}
 
 	public CompteBancaire findById(Long idCompteBancaire) {
 		return em.find(CompteBancaire.class, idCompteBancaire);
 	}
 
-	@Transactional
 	public void modifierSolde(CompteBancaire compte, int montant, boolean depot) throws CompteBancaire.SoldeInsuffisantException {
 		if(depot) {
 			compte.deposer(montant);
@@ -93,5 +91,13 @@ public class GestionnaireCompte {
 	public void supprimer(CompteBancaire compteBancaire) {
 		compteBancaire = em.merge(compteBancaire);
 		em.remove(compteBancaire);
+	}
+
+	public CompteBancaire findByIdOptimistic(Long id) {
+		return em.find(CompteBancaire.class, id, LockModeType.OPTIMISTIC);
+	}
+
+	public void detach(CompteBancaire compte) {
+		em.detach(compte);
 	}
 }

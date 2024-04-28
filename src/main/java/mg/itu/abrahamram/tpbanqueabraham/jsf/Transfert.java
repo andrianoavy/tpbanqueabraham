@@ -7,6 +7,7 @@ package mg.itu.abrahamram.tpbanqueabraham.jsf;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.io.Serializable;
 import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
 import mg.itu.abrahamram.tpbanqueabraham.jsf.util.MessageUtil;
@@ -51,6 +52,7 @@ public class Transfert implements Serializable {
 		this.montant = montant;
 	}
 
+	@Transactional
 	public String transferer() {
 		String currentUrl = "transfert?faces-redirect=true&s=" + source.getId() + "&d=" + destination.getId() + "&m=" + montant;
 		boolean erreur = false;

@@ -4,9 +4,11 @@
  */
 package mg.itu.abrahamram.tpbanqueabraham.jsf;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.transaction.Transactional;
 import java.io.Serializable;
 import mg.itu.abrahamram.tpbanqueabraham.entities.CompteBancaire;
 import mg.itu.abrahamram.tpbanqueabraham.jsf.util.MessageUtil;
@@ -17,7 +19,7 @@ import mg.itu.abrahamram.tpbanqueabraham.service.GestionnaireCompte;
  * @author Aldramech
  */
 @Named(value = "retraitDepot")
-@RequestScoped
+@ViewScoped
 public class RetraitDepot implements Serializable {
 
 	@Inject
@@ -60,7 +62,9 @@ public class RetraitDepot implements Serializable {
 
 	private String message;
 
+	@Transactional(Transactional.TxType.REQUIRES_NEW)
 	public String effectueTransaction() {
+		gc.detach(compte);
 		String currentUrl = "retraitDepot?faces-redirect=true&id=" + compte.getId() + "&m=" + montant + "&d="+depot;
 		boolean erreur = false;
 		if (montant <= 0) {
@@ -74,7 +78,12 @@ public class RetraitDepot implements Serializable {
 			message = "Le solde du compte est insuffisant(solde disponible = " + compte.getSolde() + ")";
 			MessageUtil.addFlashErrorMessage(message, "form:montant");
 			erreur=true;
+		} catch (OptimisticLockException ex) {
+			message = "Le compte de " + compte.getNom() + " a été modifié ou supprimé par un autre utilisateur!";
+			MessageUtil.addFlashErrorMessage(message);
+			erreur=true;
 		}
+
 		if(erreur) {
 			return currentUrl;
 		}
